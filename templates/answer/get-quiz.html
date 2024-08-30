@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="main-content" style="min-height: 608px;">
+    <section class="section">
+      <div class="section-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h4>{{quiz.name}} Savollar to'plami</h4>
+              </div>
+              <form method="post" action="{% url 'makeAnswer' quiz.id %}">
+                {% csrf_token %}
+                  <div class="card-body">
+                    {% for question in quiz.questions %}
+                    <div class="form-group">
+                      <h5>{{question.name}}</h5>
+                      <div class="form-group">
+                      {% for option in question.options %}
+                        <!-- <label class="d-block">{{option.name}}</label> -->
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="{{question.id}}"  value="{{option.id}}" id="exampleRadios{{option.id}}" required>
+                          <label class="form-check-label" for="exampleRadios{{option.id}}">
+                            {{option.name}}
+                          </label>
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    {% endfor %}
+                <br>
+                <button type="submit" class="btn btn-primary ms-2">Yuborish</button>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section></div>
+{% endblock %}
+{% block js %}
+
+{% endblock %}
