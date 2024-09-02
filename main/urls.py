@@ -3,11 +3,13 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('quiz-list', views.quizList, name='quizList'),
+    path('quiz-list/', views.quizList, name='quizList'),
     path('quiz-detail/<int:id>/', views.quizDetail, name='quizDetail'),
-    path('questionDelete/<int:id>/<int:pk>/', views.questionDelete, name='questionDelete'),
-    path('optionDelete/<int:ques>/<int:option>/', views.deleteOption, name='optionDelete'),
+    path('quiz-create/', views.quizCreate, name='createQuiz'),
+
+    path('question-delete/<int:id>/<int:pk>/', views.questionDelete, name='questionDelete'),
     path('question-detail/<int:id>/', views.questionDetail, name='questionDetail'),
-    path('create-quiz', views.createQuiz, name='createQuiz'),
-    path('create-question/<int:id>/', views.questionCreate, name='questionCreate'),
+    path('question-create/<int:id>/', views.questionCreate, name='questionCreate'),
+
+    path('option-delete/<int:ques>/<int:option>/', views.optionDelete, name='optionDelete'),
 ]

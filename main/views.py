@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from . import models
 from random import choice, sample
+
 
 def index(request):
     return render(request, 'index.html')
@@ -25,19 +26,26 @@ def quizList(request):
         quiz.img = choice(images)
         quizes_list.append(quiz)
 
-    return render(request, 'quiz-list.html', {'quizes':quizes_list})
+    return render(request, 'quiz/quiz-list.html', {'quizes':quizes_list})
 
 
 def quizDetail(request, id):
     quiz = models.Quiz.objects.get(id=id)
-    return render(request, 'quiz-detail.html', {'quiz':quiz})
+    return render(request, 'quiz/quiz-detail.html', {'quiz':quiz})
+
+
+# def questionDelete(request, id, pk):
+#     models.Question.objects.get(id=id).delete()
+#     return redirect('quizDetail', id=pk)
 
 def questionDelete(request, id, pk):
-    models.Question.objects.get(id=id).delete()
-    return redirect('quizDetail', id=pk)
+    question = get_object_or_404(models.Question, id=id)
+    if request.method == 'POST':
+        question.delete()
+        return redirect('quizDetail', id=pk)
 
 
-def createQuiz(request):
+def quizCreate(request):
     if request.method == 'POST':
         quiz = models.Quiz.objects.create(
             name = request.POST['name'],
@@ -45,7 +53,7 @@ def createQuiz(request):
             author = request.user
         )
         return redirect('quizDetail', quiz.id)
-    return render(request, 'quiz-create.html')
+    return render(request, 'quiz/quiz-create.html')
 
 
 def questionCreate(request, id):
@@ -73,17 +81,15 @@ def questionCreate(request, id):
             )
         return redirect('quizList')
 
-    return render(request, 'question-create.html', {'quiz':quiz})
+    return render(request, 'question/question-create.html', {'quiz':quiz})
 
 
 def questionDetail(request, id):
     question = models.Question.objects.get(id=id)
-    return render(request, 'question-detail.html', {'question':question})
+    return render(request, 'question/question-detail.html', {'question':question})
 
 
-def deleteOption(request, ques, option):
+def optionDelete(request, ques, option):
     question = models.Question.objects.get(id=ques)
     models.Option.objects.get(question=question, id=option).delete()
     return redirect('questionDetail', id=ques)
-
-
