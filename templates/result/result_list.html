@@ -1,0 +1,25 @@
+<h2>Natijalar</h2>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Savollar to'plamining nomi</th>
+            <th>Umumiy savollar soni</th>
+            <th>To'g'ri javoblar soni</th>
+            <th>Xato javoblar soni</th>
+            <th>Harakatlar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for answer in answers %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ answer.quiz.name }}</td>
+            <td>{{ answer.quiz.questions_count }}</td>
+            <td>{{ answer.correct_answers_count }}</td>
+            <td>{{ answer.incorrect_answers_count }}</td>
+            <td><a href="{% url 'results_detail' answer.id %}">Ko'rish</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

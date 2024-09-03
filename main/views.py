@@ -16,27 +16,21 @@ def quizList(request):
         'https://live-production.wcms.abc-cdn.net.au/398836216839841241467590824c5cf1?impolicy=wcms_crop_resize&cropH=2813&cropW=5000&xPos=0&yPos=0&width=862&height=485',
         'https://images.theconversation.com/files/45159/original/rptgtpxd-1396254731.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1356&h=668&fit=crop'
     ]
-    
-    quizes = models.Quiz.objects.filter(author=request.user)
-    # images = sample(len(quizes), images)
 
+    quizes = models.Quiz.objects.filter(author=request.user)
     quizes_list = []
 
     for quiz in quizes:
         quiz.img = choice(images)
         quizes_list.append(quiz)
 
-    return render(request, 'quiz/quiz-list.html', {'quizes':quizes_list})
+    return render(request, 'quiz/quiz-list.html', {'quizes': quizes_list})
 
 
 def quizDetail(request, id):
-    quiz = models.Quiz.objects.get(id=id)
-    return render(request, 'quiz/quiz-detail.html', {'quiz':quiz})
+    quiz = get_object_or_404(models.Quiz, id=id)
+    return render(request, 'quiz/quiz-detail.html', {'quiz': quiz})
 
-
-# def questionDelete(request, id, pk):
-#     models.Question.objects.get(id=id).delete()
-#     return redirect('quizDetail', id=pk)
 
 def questionDelete(request, id, pk):
     question = get_object_or_404(models.Question, id=id)
@@ -48,48 +42,72 @@ def questionDelete(request, id, pk):
 def quizCreate(request):
     if request.method == 'POST':
         quiz = models.Quiz.objects.create(
-            name = request.POST['name'],
-            amount = request.POST['amount'],
-            author = request.user
+            name=request.POST['name'],
+            amount=request.POST['amount'],
+            author=request.user
         )
         return redirect('quizDetail', quiz.id)
     return render(request, 'quiz/quiz-create.html')
 
 
 def questionCreate(request, id):
-    quiz = models.Quiz.objects.get(id=id)
+    quiz = get_object_or_404(models.Quiz, id=id)
     if request.method == 'POST':
         question_text = request.POST['name']
         true = request.POST['true']
         false_list = request.POST.getlist('false-list')
 
         question = models.Question.objects.create(
-            name = question_text,
-            quiz = quiz,
+            name=question_text,
+            quiz=quiz,
         )
-        question.save()
+
         models.Option.objects.create(
-            question = question,
-            name = true,
-            correct = True,
+            question=question,
+            name=true,
+            correct=True,
         )
 
         for false in false_list:
             models.Option.objects.create(
-                name = false,
-                question = question,
+                name=false,
+                question=question,
             )
-        return redirect('quizList')
+        return redirect('quizDetail', id=quiz.id)
 
-    return render(request, 'question/question-create.html', {'quiz':quiz})
+    return render(request, 'question/question-create.html', {'quiz': quiz})
 
 
 def questionDetail(request, id):
-    question = models.Question.objects.get(id=id)
-    return render(request, 'question/question-detail.html', {'question':question})
+    question = get_object_or_404(models.Question, id=id)
+    return render(request, 'question/question-detail.html', {'question': question})
 
 
 def optionDelete(request, ques, option):
-    question = models.Question.objects.get(id=ques)
-    models.Option.objects.get(question=question, id=option).delete()
+    question = get_object_or_404(models.Question, id=ques)
+    option = get_object_or_404(models.Option, question=question, id=option)
+    option.delete()
     return redirect('questionDetail', id=ques)
+
+
+def results_list(request):
+    answers = models.Answer.objects.filter(author=request.user)
+    return render(request, 'result/result_list.html', {'answers': answers})
+
+
+def results_detail(request, id):
+    answer = get_object_or_404(models.Answer, id=id)
+    details = models.AnswerDetail.objects.filter(answer=answer)
+    return render(request, 'result/result_detail.html', {'answer': answer, 'details': details})
+
+
+def owner_results(request, quiz_id):
+    quiz = get_object_or_404(models.Quiz, id=quiz_id)
+    answers = models.Answer.objects.filter(quiz=quiz)
+    return render(request, 'owner/owner_result.html', {'quiz': quiz, 'answers': answers})
+
+
+def owner_results_detail(request, id):
+    answer = get_object_or_404(models.Answer, id=id)
+    details = models.AnswerDetail.objects.filter(answer=answer)
+    return render(request, 'owner/owner_result_detail.html', {'answer': answer, 'details': details})

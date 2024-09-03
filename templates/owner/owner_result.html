@@ -1,0 +1,23 @@
+<h2>{{ quiz.name }} Natijalari</h2>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>To'g'ri javoblar soni</th>
+            <th>Xato javoblar soni</th>
+            <th>Harakatlar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for answer in answers %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ answer.author.username }}</td>
+ t           <td>{{ answer.correct_answers_count }}</td>
+            <td>{{ answer.incorrect_answers_count }}</td>
+            <td><a href="{% url 'owner_results_detail' answer.id %}">Ko'rish</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -4,12 +4,19 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('quiz-list/', views.quizList, name='quizList'),
-    path('quiz-detail/<int:id>/', views.quizDetail, name='quizDetail'),
-    path('quiz-create/', views.quizCreate, name='createQuiz'),
+    path('quiz/<int:id>/', views.quizDetail, name='quizDetail'),
+    path('quiz/create/', views.quizCreate, name='quizCreate'),
 
-    path('question-delete/<int:id>/<int:pk>/', views.questionDelete, name='questionDelete'),
-    path('question-detail/<int:id>/', views.questionDetail, name='questionDetail'),
-    path('question-create/<int:id>/', views.questionCreate, name='questionCreate'),
+    path('question/<int:id>/delete/<int:pk>/', views.questionDelete, name='questionDelete'),
+    path('question/<int:id>/', views.questionDetail, name='questionDetail'),
+    path('question/<int:id>/create/', views.questionCreate, name='questionCreate'),
 
-    path('option-delete/<int:ques>/<int:option>/', views.optionDelete, name='optionDelete'),
+    path('option/<int:ques>/delete/<int:option>/', views.optionDelete, name='optionDelete'),
+
+    path('result/', views.results_list, name='results_list'),
+    path('result/<int:id>/', views.results_detail, name='results_detail'),
+
+    path('owner/result/<int:quiz_id>/', views.owner_results, name='owner_results'),
+    path('owner/result/detail/<int:id>/', views.owner_results_detail, name='owner_results_detail'),
+
 ]

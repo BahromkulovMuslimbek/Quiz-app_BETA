@@ -1,0 +1,32 @@
+<h2>{{ answer.quiz.name }} Natijalari</h2>
+
+<div>
+    <p>Savollar to'plamining nomi: {{ answer.quiz.name }}</p>
+    <p>Savollar soni: {{ answer.quiz.questions_count }}</p>
+    <p>To'g'ri javoblar soni: {{ answer.correct_answers_count }}</p>
+    <p>Noto'g'ri javoblar soni: {{ answer.incorrect_answers_count }}</p>
+    <p>To'g'ri javoblar foizi: {{ answer.correct_answers_percentage }}%</p>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Savol nomi</th>
+            <th>To'g'ri javob</th>
+            <th>Belgilangani javob</th>
+            <th>Holat</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detail in details %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ detail.question.name }}</td>
+            <td>{{ detail.question.correct_option.name }}</td>
+            <td>{{ detail.user_choice.name }}</td>
+            <td>{{ detail.is_correct|yesno:"To'g'ri,Noto'g'ri" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
