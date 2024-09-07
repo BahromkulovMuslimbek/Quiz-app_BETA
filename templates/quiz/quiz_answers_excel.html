@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excelga Eksport Qilish</title>
+</head>
+<body>
+    <h1>{{ quiz.name }} ni Excelga eksport qilish</h1>
+    <p>Excel faylni yuklash uchun quyidagi tugmani bosing:</p>
+    <a href="{% url 'export_quiz_answers_to_excel' quiz.id %}" class="btn btn-success">Excel Faylni Yuklab Olish</a>
+</body>
+</html>

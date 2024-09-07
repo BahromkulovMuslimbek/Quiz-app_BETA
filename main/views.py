@@ -164,7 +164,7 @@ def export_quiz_to_pdf(request, quiz_id):
     quiz = get_object_or_404(models.Quiz, id=quiz_id)
     answers = models.Answer.objects.filter(quiz=quiz)
 
-    html = render_to_string('quiz/quiz_pdf_template.html', {'quiz': quiz, 'answers': answers})
+    html = render_to_string('quiz/quiz_to_pdf.html', {'quiz': quiz, 'answers': answers})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename={quiz.name}.pdf'
 
