@@ -19,4 +19,8 @@ urlpatterns = [
     path('owner/result/<int:quiz_id>/', views.owner_results, name='owner_results'),
     path('owner/result/detail/<int:id>/', views.owner_results_detail, name='owner_results_detail'),
 
+    path('quiz/<int:quiz_id>/export/excel/', views.export_quiz_answers_to_excel, name='export_quiz_answers_to_excel'),
+    path('answer/<int:id>/export/excel/', views.export_answer_details_to_excel, name='export_answer_details_to_excel'),
+    path('quiz/<int:quiz_id>/export/pdf/', views.export_quiz_to_pdf, name='export_quiz_to_pdf'),
+
 ]

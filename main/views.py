@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from . import models
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 from random import choice, sample
+from xhtml2pdf import pisa
+from . import models
+import openpyxl
 
 
 def index(request):
@@ -111,3 +115,58 @@ def owner_results_detail(request, id):
     answer = get_object_or_404(models.Answer, id=id)
     details = models.AnswerDetail.objects.filter(answer=answer)
     return render(request, 'owner/owner_result_detail.html', {'answer': answer, 'details': details})
+
+
+def export_quiz_answers_to_excel(request, quiz_id):
+    quiz = get_object_or_404(models.Quiz, id=quiz_id)
+    answers = models.Answer.objects.filter(quiz=quiz)
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+    worksheet.title = f"Javoblar {quiz.name} uchun"
+    worksheet.append(["#", "Foydalanuvchi ismi", "To'g'ri javoblar soni", "Xato javoblar soni", "To'g'ri javoblar foizi (%)"])
+
+    for idx, answer in enumerate(answers, 1):
+        worksheet.append([
+            idx,
+            answer.author.username,
+            answer.correct_answers_count,
+            answer.incorrect_answers_count,
+            answer.correct_answers_percentage
+        ])
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename={quiz.name}_javoblar.xlsx'
+    workbook.save(response)
+    return response
+
+
+def export_answer_details_to_excel(request, id):
+    answer = get_object_or_404(models.Answer, id=id)
+    details = models.AnswerDetail.objects.filter(answer=answer)
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+    worksheet.title = f"Javoblar {answer.quiz.name} uchun"
+    worksheet.append(["#", "Savol nomi", "Foydalanuvchi tanlovi", "Holat (To'g'ri/Xato)"])
+
+    for idx, detail in enumerate(details, 1):
+        worksheet.append([
+            idx,
+            detail.question.name,
+            detail.user_choice.name,
+            "To'g'ri" if detail.is_correct else "Xato"
+        ])
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename={answer.quiz.name}_javob_tafsilotlari.xlsx'
+    workbook.save(response)
+    return response
+
+
+def export_quiz_to_pdf(request, quiz_id):
+    quiz = get_object_or_404(models.Quiz, id=quiz_id)
+    answers = models.Answer.objects.filter(quiz=quiz)
+
+    html = render_to_string('quiz/quiz_pdf_template.html', {'quiz': quiz, 'answers': answers})
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename={quiz.name}.pdf'
+
+    pisa.CreatePDF(html, dest=response)
+    return response

@@ -169,5 +169,7 @@
         </div>
       </div>
     <div id="ascrail2001" class="nicescroll-rails nicescroll-rails-vr" style="width: 8px; z-index: 999; cursor: default; position: absolute; top: 0px; left: 272px; height: 703px; display: none;"><div class="nicescroll-cursors" style="position: relative; top: 0px; float: right; width: 6px; height: 0px; background-color: rgb(66, 66, 66); border: 1px solid rgb(255, 255, 255); background-clip: padding-box; border-radius: 5px;"></div></div><div id="ascrail2001-hr" class="nicescroll-rails nicescroll-rails-hr" style="height: 8px; z-index: 999; top: 695px; left: 0px; position: absolute; cursor: default; display: none;"><div class="nicescroll-cursors" style="position: absolute; top: 0px; height: 6px; width: 0px; background-color: rgb(66, 66, 66); border: 1px solid rgb(255, 255, 255); background-clip: padding-box; border-radius: 5px;"></div></div></div>
+    <a href="{% url 'export_quiz_answers_to_excel' quiz.id %}" class="btn">Javoblarni Excelga eksport qilish</a>
+    <a href="{% url 'export_quiz_to_pdf' quiz.id %}" class="btn">Viktorinani PDFga eksport qilish</a>
   </div>
 {% endblock %}
